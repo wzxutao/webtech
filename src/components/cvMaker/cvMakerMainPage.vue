@@ -1,5 +1,5 @@
 <template>
-<div cv-page>
+<div cv-page id="cv-main-page">
 
   <avatar />
 

@@ -16,6 +16,17 @@ router.get('/template.css', async(req, res) =>{
   res.sendFile(cssFilePath);
 })
 
+router.get('/templateContent.html', async(req, res) => {
+  let templateId = req.query.id != undefined ? req.query.id : 0; // 0 by default
+
+  if(!validTemplateIds.includes(templateId)){
+    return res.status(404).send('Template content not found');
+  }
+  const htmlFilePath = path.resolve(__dirname + `/../assets/protected/templates/${templateId}.html`);
+  console.log(`template content ${templateId} sent`);
+  res.sendFile(htmlFilePath);
+})
+
 // get an array of template briefs containing img link and description
 router.get('/templateBriefs', async(req, res) => {
   let briefs = [];

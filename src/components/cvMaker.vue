@@ -414,9 +414,22 @@ export default {
       if(this.mode === MODE_INSERT) return this.handleInsertion(ev);
       if(this.mode === MODE_DELETE) return this.handleDeletion(ev);
     },
+    // template html
+    async fetchTemplateContent(){
+      if(typeof this.templateId === "undefined") return;
+      try{
+        let res = await this.$http.get(`/api/template/templateContent.html?id=${this.templateId}`);
+        document.getElementById("cv-main-page").innerHTML = res.body;
+        console.log("template content loaded")
+      }catch(err){
+        if(err.status === 404) return;
+        this.$alert("template content loading failed", "Error", "Error")
+      }
+
+    },
     fetchTemplate(){
       const templateElemId = 'cv-template'
-      if(this.templateId === undefined) return;
+      if(typeof this.templateId === "undefined") return;
       // removing existing template
       let existingTemplates = document.querySelectorAll(`#${templateElemId}`);
       for(let templateNode of existingTemplates){
@@ -508,7 +521,7 @@ export default {
       return url + query;
     }
   },
-  created() {
+  async created() {
     // fetch saved data
     const query = this.$router.currentRoute.query;
     this.templateId = query.templateId ? query.templateId : 0;
@@ -517,7 +530,8 @@ export default {
     if(this.fetchSavedData){
       this.loadSavedData();
     }else{
-      this.fetchTemplate();
+      await this.fetchTemplateContent();
+      await this.fetchTemplate();
     }
 
     bus.$on('downloadAsPdfClick', this.generatePdf);

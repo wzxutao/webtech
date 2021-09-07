@@ -32,6 +32,8 @@ const init = async () => {
             case 'txt':
               txtIds.push(name);
               break;
+            case 'html':
+              break;
             default:
               throw new Error(`unrecognized template file: ${file}`);
           }
