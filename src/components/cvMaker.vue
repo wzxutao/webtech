@@ -526,5 +526,5 @@ export default {
 }
 </script>
 
-<style scoped src='../view/index/assets/cvMaker.css'>
+<style src='../view/index/assets/cvMaker.css'>
 </style>
