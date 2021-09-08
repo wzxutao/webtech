@@ -184,8 +184,6 @@ export default {
         avatarUrl: avatarImg,
       }
 
-
-
       try{
         let res = await this.$http.post('/api/cvMaker/save', reqBody);
         if(res.status === 201){
@@ -207,91 +205,18 @@ export default {
     async loadSavedData(){
       try{
         let res = await this.$http.get('/api/cvMaker/load');
-        if(res.status === 200){
-          // let htmlHeaders = res.body.htmlHeaders;
-          let cvContents = res.body.cvContents;
-          let avatarUrl = res.body.avatarUrl;
+        let cvContents = res.body.cvContents;
+        // let avatarUrl = res.body.avatarUrl;
 
-          // load template
-          this.templateId = res.body.templateId;
-          await this.fetchTemplate();
+        // load template
+        this.templateId = res.body.templateId;
+        await this.fetchTemplate();
 
-          // change avatar
-          let avatarImg = document.querySelectorAll('#avatar-img')[0];
-          avatarImg.src = avatarUrl;
-
-          let domParser = new DOMParser();
-          // let doc = domParser.parseFromString(htmlHeaders, 'text/html');
-          // document.head.replaceWith(doc.head);
-
-
-          // replace children nodes
-          // keeps elems that have event listeners
-          let old_div_A4paper = this.$refs['cv-contents'].firstElementChild;
-          let new_div_A4paper = domParser.parseFromString(cvContents, 'text/html').body.firstChild;
-
-
-          while(new_div_A4paper){
-            if(!old_div_A4paper){ // page not enough
-              this.addSubPage();
-              old_div_A4paper = this.$refs['cv-contents'].lastElementChild;
-            }
-
-
-            let new_div_cvPage = new_div_A4paper.firstElementChild;
-            let new_elem = new_div_cvPage.firstElementChild;
-
-            let old_div_cvPage = old_div_A4paper.firstElementChild;
-            let old_elem = old_div_cvPage.firstElementChild;
-            // handle 'dont-replace' elems
-            // which should be the direct children of elem with 'cv-page' attr
-            while(new_elem){
-              if(old_elem){ // old elem enough
-                const is_old_replacable = !old_elem.hasAttribute('dont-replace');
-                const is_new_replacable = !new_elem.hasAttribute('dont-replace');
-                if(is_old_replacable && is_new_replacable){
-                  let temp = old_elem.nextSibling;
-                  old_elem.insertAdjacentHTML('beforebegin', new_elem.outerHTML);
-                  new_elem = new_elem.nextSibling;
-                  old_div_cvPage.removeChild(old_elem);
-                  old_elem = temp;
-                }else if(!is_old_replacable && !is_new_replacable){
-                  old_elem = old_elem.nextSibling;
-                  new_elem = new_elem.nextSibling;
-                }else if(!is_new_replacable){
-                  let temp = old_elem.nextSibling;
-                  old_div_cvPage.removeChild(old_elem);
-                  old_elem = temp;
-                }else{
-                  old_elem.insertAdjacentHTML('beforebegin', new_elem.outerHTML);
-                  new_elem = new_elem.nextSibling;
-                }
-              }else{  // old elem exhausted
-                old_div_cvPage.appendChild(new_elem);
-                new_elem = new_elem.nextSibling;
-              }
-            }
-            new_div_A4paper = new_div_A4paper.nextSibling;
-            old_div_A4paper = old_div_A4paper.nextSibling;
-          } // new page exhausted
-          while(old_div_A4paper){ // remove excessive page
-            let temp = old_div_A4paper.nextSibling;
-            this.$refs['cv-contents'].removeChild(old_div_A4paper);
-            old_div_A4paper = temp;
-          }
-
-        }else{
-          this.$alert('Load failed.','Error','error');
-        }
-      }catch(err){
-        if(err.status === 401){
-          return this.$alert('Please log in first','Error','error');
-        }else if(err.status === 404){
-          return this.$alert("There's nothing to load.",'Warning','warning');
-        }
-        console.log(err);
-        this.alert('Load failed.','Error','error');
+        document.querySelectorAll(".cv-contents")[0].innerHTML = cvContents;
+      }catch(err) {
+        this.$alert("load failed", "error", "error")
       }
+          
     },
     async generatePdf() {
       // for style, you only need ${templateId}.css and A4Paper.css
