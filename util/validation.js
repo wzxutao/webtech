@@ -14,7 +14,7 @@ const loginSchema = Joi.object({
 
 const saveCvSchema = Joi.object({
   templateId: Joi.number().required(),
-  htmlHeaders: Joi.string().required(),
+  htmlHeaders: Joi.string().allow(null),
   cvContents: Joi.string().required(),
   avatarUrl: Joi.string().allow(null, "")
 })

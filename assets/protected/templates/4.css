@@ -1,8 +1,104 @@
+:root {
+  --header-white: rgb(244, 255, 234)
+}
+
 body {
   -webkit-print-color-adjust: exact !important;
 }
-.cv-contents h1 {
-  background-color: cornflowerblue;
-  margin: 0, 0;
-  text-align: center;
+
+header {
+  background-color: rgb(122, 122, 124);
+  color: var(--header-white);
+  position: relative;
+  left: -77px;
+  top: -74px;
+  width: 942px;
 }
+
+header h1 {
+  padding: 25px 15% 0;
+}
+
+header hr {
+  width: 70%;
+  margin-bottom: 0;
+}
+
+header p {
+  padding: 0 15% 10px;
+}
+
+.cv-body {
+  position: relative;
+    left: -76px;
+    top: -85px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 33.33% 33.33% 33.33%;
+  grid-template-rows: 23% 27% 36% 14%;
+  width: 940px;
+  height: 1125px;
+}
+
+.grid-item {
+  /* background-color: rgb(233, 232, 232); */
+  border: 1px dotted #777;
+  width: 100%;
+}
+
+
+.grid-item h1, p {
+  margin: 10px 10px;
+}
+
+.grid-item h1 {
+  font-size: 1.5rem;
+  letter-spacing: 3px;
+  margin-bottom: 20px;
+}
+
+.contact-info-item {
+  padding: 20px 20px 0px;
+}
+
+.contact-info-icon {
+  width: 25px;
+  max-height: 25px;
+  margin-right: 10px;
+}
+
+.education div{
+  margin-bottom: 10px;
+}
+
+.education * {
+  margin: 0 10px;
+}
+
+.education .institution-name {
+  font-weight: bold;
+  margin-left: 0;
+}
+
+.education .degree-title {
+  font-style: italic;
+  color: rgb(70, 83, 199);
+}
+
+.education .year {
+  text-align: right;
+}
+
+.projects * {
+  margin: 10px 10px;
+}
+
+.projects h2 {
+  font-size: 1.2rem;
+  margin-left: 0;
+}
+
+
+

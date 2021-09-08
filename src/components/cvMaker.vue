@@ -1,6 +1,6 @@
 <template>
 <div class="cv-back">
-  <div class="sidenav toolsBarSize">
+  <div class="sidenav">
     <download-button :inputTime='this.downloadExpectedTime' />
     <div>
       <div @click="saveProgress" class="sameLineDisplay">
@@ -42,6 +42,9 @@
         <incline-font-button ref="incline"/>
       </div>
     </div>
+    <button class="btn btn-secondary" @click="previewPrint">
+      Preview(dev)
+    </button>
 </div>
 
   <!-- cv contents -->
@@ -154,6 +157,19 @@ export default {
     animateProgressSaved(){
       this.$confirm("", "Saved", "success");
     },
+    async previewPrint(){
+      let cvContents = await getElemByRef('cv-contents', this);
+      document.write(`
+          <html>
+          <head>
+            <link href="/css/A4Paper.css" rel="stylesheet">
+            <link href="/api/template/template.css?id=${this.templateId}" rel="stylesheet">
+          </head>
+          <body>
+            <div class="cv-contents">${cvContents.innerHTML}</div>
+          </body>
+          </html>`);
+    },
     // returns null on succees
     async saveProgress(){
       let cvContents = await getElemByRef('cv-contents', this);
@@ -161,11 +177,14 @@ export default {
       avatarImg = avatarImg !== null ? avatarImg.src : ""
 
       let reqBody = {
-        htmlHeaders: document.head.innerHTML,
+        // no longer needs to send the headers, style = templateId.css + A4Paper.css
+        htmlHeaders: null,
         cvContents: cvContents.innerHTML,
         templateId: this.templateId,
         avatarUrl: avatarImg,
       }
+
+
 
       try{
         let res = await this.$http.post('/api/cvMaker/save', reqBody);
@@ -189,18 +208,21 @@ export default {
       try{
         let res = await this.$http.get('/api/cvMaker/load');
         if(res.status === 200){
-          let htmlHeaders = res.body.htmlHeaders;
+          // let htmlHeaders = res.body.htmlHeaders;
           let cvContents = res.body.cvContents;
           let avatarUrl = res.body.avatarUrl;
+
+          // load template
+          this.templateId = res.body.templateId;
+          await this.fetchTemplate();
 
           // change avatar
           let avatarImg = document.querySelectorAll('#avatar-img')[0];
           avatarImg.src = avatarUrl;
 
           let domParser = new DOMParser();
-          let doc = domParser.parseFromString(htmlHeaders, 'text/html');
-
-          document.head.replaceWith(doc.head);
+          // let doc = domParser.parseFromString(htmlHeaders, 'text/html');
+          // document.head.replaceWith(doc.head);
 
 
           // replace children nodes
@@ -272,6 +294,7 @@ export default {
       }
     },
     async generatePdf() {
+      // for style, you only need ${templateId}.css and A4Paper.css
       let rv = await this.saveProgress();
       if(rv !== null) return; // save failed
 
@@ -293,6 +316,7 @@ export default {
     addSubPage(){
       if(this.maxPageId >= 5) return this.$alert('A concise CV is a good CV.','Warning','warning');
 
+      this.$alert("Currently, extra pages won't be printed as HRs rarely read multi-page CVs.", "Warning", "warning")
       const cvPageClass = Vue.extend(cvPage);
       let newPage = new cvPageClass({
         propsData:{
@@ -542,4 +566,13 @@ export default {
 </script>
 
 <style src='../view/index/assets/cvMaker.css'>
+</style>
+<style>
+  @media print {
+    .sidenav {
+      display: none;
+    }
+
+
+  }
 </style>

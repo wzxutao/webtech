@@ -28,7 +28,11 @@ async function toPdf(html, userId, jwt, serverRootUrl) {
   await page.setCookie({name:"jwt", value:jwt, url:serverRootUrl});
 
   await page.goto(htmlTransitUrl, {waitUntil:'networkidle0'});
-  const newPdf = await page.pdf({ format: 'A4' });
+  const newPdf = await page.pdf({ 
+    format: 'A4', 
+    // only supports one page now. Who needs multi-page resume?
+    pageRanges: "-1"
+  });
   await browser.close();
   return newPdf;
 }

@@ -15,7 +15,7 @@ const Template =
 const UserCv =
 ` CREATE TABLE IF NOT EXISTS UserCv (
     userId INTEGER PRIMARY KEY,
-    htmlHeaders TEXT NOT NULL,
+    htmlHeaders TEXT,
     cvContents TEXT NOT NULL,
     templateId INTEGER NOT NULL,
     avatarUrl TEXT,

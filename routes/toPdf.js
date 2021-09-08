@@ -15,12 +15,21 @@ router.get('/', verifyJwt, async(req, res) =>{
   if(userData === null){
     return res.status(404).send('no saved data');
   }
-  let htmlHeaders = userData.htmlHeaders;
+  // let htmlHeaders = userData.htmlHeaders;
   let cvContents = userData.cvContents;
   let templateId = userData.templateId;
 
   const html =
-  `<html><head>${htmlHeaders}</head><body><div class="cv-contents">${cvContents}</div></body></html>`;
+  `
+  <html>
+  <head>
+    <link href="/css/A4Paper.css" rel="stylesheet">
+    <link href="/api/template/template.css?id=${templateId}" rel="stylesheet">
+  </head>
+  <body>
+    <div class="cv-contents">${cvContents}</div>
+  </body>
+  </html>`;
 
   try{
     const newPdf = await pdf.toPdf(html, userId, req.jwt, serverRootUrl);

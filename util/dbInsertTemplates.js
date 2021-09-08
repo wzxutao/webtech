@@ -24,6 +24,7 @@ const init = async () => {
       fs.readdir(templateDirPath, (err, files) => {
         if(err) throw err;
         files.forEach((file) =>{
+
           let [name, format] = file.split('.');
           switch(format){
             case 'css':
@@ -35,7 +36,7 @@ const init = async () => {
             case 'html':
               break;
             default:
-              throw new Error(`unrecognized template file: ${file}`);
+              // throw new Error(`unrecognized template file: ${file}`);
           }
         })
         resolve(validTemplateIds.push(...cssIds.filter(el => txtIds.includes(el))));

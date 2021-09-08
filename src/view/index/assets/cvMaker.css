@@ -1,6 +1,6 @@
 .sidenav {
-  width: 160px;
-  height: 300px;
+  width: 200px;
+  height: 700px;
   position: fixed;
   z-index: 1;
   top: 100px;
@@ -151,10 +151,7 @@
   }
 }
 
-.toolsBarSize{
-  height: 550px;
-  width: 200px;
-}
+
 
 .sameLineDisplay{
   display: inline-block;
