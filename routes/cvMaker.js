@@ -148,7 +148,12 @@ router.post('/save', verifyJwt, async(req, res) =>{
   const avatarUrl = cv.avatarUrl;
   
 
-  let dbImgName = path.basename(avatarUrl).match(/(?<=(avatar\?name=)).*/g);
+  if(typeof avatarUrl !== "undefined" && avatarUrl !== null && avatarUrl !== ""){
+    console.log(avatarUrl)
+    let dbImgName = path.basename(avatarUrl).match(/[^/]*(.png|.jpg|.gif)$/);
+    dbImgName = dbImgName[0]
+    cleanAvatarDir(userId, dbImgName);
+  }
 
 
   const sql = `INSERT OR REPLACE INTO UserCv
@@ -156,11 +161,6 @@ router.post('/save', verifyJwt, async(req, res) =>{
                 VALUES (?, ?, ?, ?, ?);`
   let rv = await db.async_run(sql,
     [userId, htmlHeaders, cvContents, templateId, avatarUrl]);
-
-  if (dbImgName !== null){
-    dbImgName = dbImgName[0]
-    cleanAvatarDir(userId, dbImgName);
-  }
 
   if(rv !== null){
     console.log(rv);

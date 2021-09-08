@@ -157,13 +157,14 @@ export default {
     // returns null on succees
     async saveProgress(){
       let cvContents = await getElemByRef('cv-contents', this);
-      let avatarImg = document.querySelectorAll('#avatar-img')[0];
+      let avatarImg = document.getElementById('avatar-img');
+      avatarImg = avatarImg !== null ? avatarImg.src : ""
 
       let reqBody = {
         htmlHeaders: document.head.innerHTML,
         cvContents: cvContents.innerHTML,
         templateId: this.templateId,
-        avatarUrl: avatarImg.src,
+        avatarUrl: avatarImg,
       }
 
       try{

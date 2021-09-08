@@ -16,7 +16,7 @@ const saveCvSchema = Joi.object({
   templateId: Joi.number().required(),
   htmlHeaders: Joi.string().required(),
   cvContents: Joi.string().required(),
-  avatarUrl: Joi.string().required()
+  avatarUrl: Joi.string().allow(null, "")
 })
 
 

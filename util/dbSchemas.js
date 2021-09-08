@@ -18,7 +18,7 @@ const UserCv =
     htmlHeaders TEXT NOT NULL,
     cvContents TEXT NOT NULL,
     templateId INTEGER NOT NULL,
-    avatarUrl TEXT NOT NULL,
+    avatarUrl TEXT,
     FOREIGN KEY (userId) REFERENCES User(id)
 );`
 
